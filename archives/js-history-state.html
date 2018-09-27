@@ -1,0 +1,730 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="本文转载至 http://weiboria.sinaapp.com/?p=174 DOM中的window对象通过window.history方法提供了对浏览器历史记录的读取，让你可以在用户的访问记录中前进和后退。 从HTML5开始，我们可以开始操作这个历史记录堆栈。 History 使用back(), forward(),和go()方法可以在用户的历史记录中前进和后退 前进和后退 后退： wind">
+<meta property="og:type" content="article">
+<meta property="og:title" content="操作浏览器历史 Manipulating the browser history">
+<meta property="og:url" content="https://congpeijun.com/archives/js-history-state.html">
+<meta property="og:site_name" content="Hello World">
+<meta property="og:description" content="本文转载至 http://weiboria.sinaapp.com/?p=174 DOM中的window对象通过window.history方法提供了对浏览器历史记录的读取，让你可以在用户的访问记录中前进和后退。 从HTML5开始，我们可以开始操作这个历史记录堆栈。 History 使用back(), forward(),和go()方法可以在用户的历史记录中前进和后退 前进和后退 后退： wind">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-02-03T14:16:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="操作浏览器历史 Manipulating the browser history">
+<meta name="twitter:description" content="本文转载至 http://weiboria.sinaapp.com/?p=174 DOM中的window对象通过window.history方法提供了对浏览器历史记录的读取，让你可以在用户的访问记录中前进和后退。 从HTML5开始，我们可以开始操作这个历史记录堆栈。 History 使用back(), forward(),和go()方法可以在用户的历史记录中前进和后退 前进和后退 后退： wind">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://congpeijun.com/archives/js-history-state.html"/>
+
+
+
+
+
+  <title> 操作浏览器历史 Manipulating the browser history | Hello World </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?7fcd4476f6aae4f8585d4970bd7c1355";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hello World</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">Just So So ...</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about-me" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://congpeijun.com/archives/js-history-state.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="丛培君">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/881552?v=3&s=460">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Hello World">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Hello World" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                操作浏览器历史 Manipulating the browser history
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-03-01T10:13:05+08:00">
+                2012-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/archives/js-history-state.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="archives/js-history-state.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文转载至 <a href="http://weiboria.sinaapp.com/?p=174" target="_blank" rel="noopener">http://weiboria.sinaapp.com/?p=174</a></p>
+<p>DOM中的window对象通过window.history方法提供了对浏览器历史记录的读取，让你可以在用户的访问记录中前进和后退。</p>
+<p>从HTML5开始，我们可以开始操作这个历史记录堆栈。</p>
+<p>History</p>
+<p>使用back(), forward(),和go()方法可以在用户的历史记录中前进和后退</p>
+<p>前进和后退</p>
+<p>后退：</p>
+<p>window.history.back();<br>这个方法会像用户点击了浏览器工具栏上的返回键一样。</p>
+<p>同样的，也可以用以下方法产生用户前进行为：</p>
+<p>window.history.forward();<br>移动到历史记录中特定的位置</p>
+<p>你可以使用go()方法从session历史中载入特定的页面。</p>
+<p>向后移动一页：</p>
+<p>window.history.go(-1);<br>向前移动一页：</p>
+<p>window.history.go(1);<br>类似的，你可以前进或者后退多页。</p>
+<p>还可以通过检查浏览器历史记录的length属性来找到历史记录堆栈中的页面总数。</p>
+<p>var numberOfEntries = window.history.length;<br>注意: IE支持向go()方法传URL参数。</p>
+<p>添加和修改history实体</p>
+<p>自Gecko2开始引入 (Firefox 4 / Thunderbird 3.3 / SeaMonkey 2.1)</p>
+<p>HTML5引入了histtory.pushState() 和history.replaceState()这两个方法，他们允许添加和修改history实体。同时，这些方法会和window.onpostate事件一起工作。</p>
+<p>使用history.pushState()方法来修改referrer,这种方法可以被用在经过修改状态后而为xmlhttpRequest对象创建的http header中。这个referrer会是创建XMLHttpRequest 时document的URL。</p>
+<p>pushState 用于向 history 添加当前页面的记录，而 replaceState 和 pushState 的用法完全一样，唯一的区别就是它用于修改当前页面在 history 中的记录。</p>
+<p>例子</p>
+<p>假设<a href="http://mozilla.org/foo.html页面执行了一下JS" target="_blank" rel="noopener">http://mozilla.org/foo.html页面执行了一下JS</a></p>
+<p>var stateObj = { foo: “bar” };<br>history.pushState(stateObj, “page 2”, “bar.html”);<br>这种方法将会使url地址栏显示<a href="http://mozilla.org/bar.html，但浏览器不会加载bar.html页面，即使这个页面存在也不会加载。" target="_blank" rel="noopener">http://mozilla.org/bar.html，但浏览器不会加载bar.html页面，即使这个页面存在也不会加载。</a></p>
+<p>现在再次假设用户继续访问<a href="http://google.com，然后点击后退。这时，url地址栏将会，http://mozilla.org/bar.html，页面会得到popstate事件（chrome），这个状态对象会包含一个stateObj的copy。这个页面看起来像foo.html。+" target="_blank" rel="noopener">http://google.com，然后点击后退。这时，url地址栏将会，http://mozilla.org/bar.html，页面会得到popstate事件（chrome），这个状态对象会包含一个stateObj的copy。这个页面看起来像foo.html。+</a></p>
+<p>这时，我们再次点击后退，URL将变成<a href="http://mozilla.org/foo.html，document将得到另一个popstate事件和为null的state对象。这次的返回动作并没有改变文档的内容。（也许会过一会尝试加载…chrome）" target="_blank" rel="noopener">http://mozilla.org/foo.html，document将得到另一个popstate事件和为null的state对象。这次的返回动作并没有改变文档的内容。（也许会过一会尝试加载…chrome）</a></p>
+<p>pushState方法</p>
+<p>pushState()有三个参数:state对象，标题(现在是被忽略，未作处理)，URL(可选)。具体细节：</p>
+<p>state对象 – state对象是一个JavaScript对象，它关系到由pushState()方法创建出来的新的history实体。用以存储关于你所要插入到历史记录的条目的相关信息。 State对象可以是任何Json字符串。因为firefox会使用用户的硬盘来存取state对象，这个对象的最大存储空间为640k。如果大于这个数值，则pushState()方法会抛出一个异常。如果确实需要更多的空间来存储，请使用本地存储。<br>title —firefox现在回忽略这个参数，虽然它可能将来会被使用上。而现在最安全的使用方式是传一个空字符串，以防止将来的修改。或者可以传一个简短的标题来表示state<br>URL —这个参数用来传递新的history实体的URL，注意浏览器将不会在调用pushState()方法后加载这个URL。但也许会过一会尝试加载这个URL。比如在用户重启了浏览器后，新的url可以不是绝对路径。如果是相对路径，那么它会相对于现有的url。新的url必须和现有的url同域，否则pushState()将抛出异常。这个参数是选填的，如果为空，则会被置为document当前的url。<br>某种意义上来说，调用pushState()方法很像设置了window.location = “#foo”,这两者都会创建和激活另一个关联到当前document的history实体，但pushState()另外有一些优点：</p>
+<p>l  新的url可以是任何和当前url同域的url，相比之下，如果只设置hash，window.location会保持在同一个document。</p>
+<p>l  如果不需要，你可以不修改url。对比而言，设置window.location = “#foo”;仅产生新的history实体，如果你当前的hash不是#foo</p>
+<p>l  你可以将任意的数据与你的新history实体关联。使用基于hash的方法，需要将所有相关的数据编码为一个短字符串。</p>
+<p>注意，pushState()方法不会使hashchange时间发生，即使是新旧url只是hash不同。</p>
+<p>replaceState()方法</p>
+<p>history.replaceState() 用起来很像pushState()，除了replaceState()是用来修改当前的history实体而不是创建一个新的。这个方法有时会很有用，当你需要对某些用户行为作反应而更新一个state对象或者当前history实体时，可以使用它来更新state对象或者当前history实体的url。</p>
+<p>popstate事件</p>
+<p>当history实体被改变时，popstate事件将会发生。如果history实体是有pushState和replaceState方法产生的，popstate事件的state属性会包含一份来自history实体的state对象的拷贝</p>
+<p>详见window.onpopstate</p>
+<p>读取当前的state</p>
+<p>读取现有state</p>
+<p>当页面加载时，它可能会有一个非空的state对象。这可能发生在当页面设置一个state对象(使用pushState或者replaceState)之后用户重启了浏览器。当页面重新加载，页面将收到onload事件，但不会有popstate事件。然而，如果你读取history.state属性，将在popstate事件发生后得到这个state对象</p>
+<p>var currentState = history.state;</p>
+<p>Browsers: Tested and Working In</p>
+<p>HTML5 Browsers</p>
+<p>Chrome 8,9,10<br>Firefox 4<br>Safari 5<br>Opera 11<br>Safari iOS 4.3<br>HTML4 Browsers</p>
+<p>IE 6,7,8,9<br>Firefox 3<br>Opera 10<br>Safari 4<br>Safari iOS prior to version 4.3</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/archives/found-ubuntu-password.html" rel="next" title="进Ubuntu的single模式不需密码的方法">
+                <i class="fa fa-chevron-left"></i> 进Ubuntu的single模式不需密码的方法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/archives/jquery-bind-live-delegate.html" rel="prev" title="jQuery的.bind()、.live()和.delegate()之间区别">
+                jQuery的.bind()、.live()和.delegate()之间区别 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="archives/js-history-state.html"
+           data-title="操作浏览器历史 Manipulating the browser history" data-url="https://congpeijun.com/archives/js-history-state.html">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars0.githubusercontent.com/u/881552?v=3&s=460"
+               alt="丛培君" />
+          <p class="site-author-name" itemprop="name">丛培君</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/congpeijun" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2012 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">丛培君</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"congpeijun"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

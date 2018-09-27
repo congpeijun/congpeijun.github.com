@@ -1,0 +1,719 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="转自：http://www.mysqlops.com/2011/11/08/puppet-errors.html 【导读】puppet在运维管理是个自动化的工具，作用非常明显，但是苦于puppet 中文资料不多，puppet学习难度大，在puppet使用过程中，碰到很多各种奇怪的问题，这里是 sky的个人总结的一些puppet常见错误，以及相应的解决方法，也感谢部分群友的分享：坚持创新和Ninja">
+<meta property="og:type" content="article">
+<meta property="og:title" content="puppet常见错误解释及解决方法">
+<meta property="og:url" content="https://congpeijun.com/archives/puppet常见错误解释及解决方法.html">
+<meta property="og:site_name" content="Hello World">
+<meta property="og:description" content="转自：http://www.mysqlops.com/2011/11/08/puppet-errors.html 【导读】puppet在运维管理是个自动化的工具，作用非常明显，但是苦于puppet 中文资料不多，puppet学习难度大，在puppet使用过程中，碰到很多各种奇怪的问题，这里是 sky的个人总结的一些puppet常见错误，以及相应的解决方法，也感谢部分群友的分享：坚持创新和Ninja">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-02-02T15:00:02.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="puppet常见错误解释及解决方法">
+<meta name="twitter:description" content="转自：http://www.mysqlops.com/2011/11/08/puppet-errors.html 【导读】puppet在运维管理是个自动化的工具，作用非常明显，但是苦于puppet 中文资料不多，puppet学习难度大，在puppet使用过程中，碰到很多各种奇怪的问题，这里是 sky的个人总结的一些puppet常见错误，以及相应的解决方法，也感谢部分群友的分享：坚持创新和Ninja">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://congpeijun.com/archives/puppet常见错误解释及解决方法.html"/>
+
+
+
+
+
+  <title> puppet常见错误解释及解决方法 | Hello World </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?7fcd4476f6aae4f8585d4970bd7c1355";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Hello World</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+    
+      <p class="site-subtitle">Just So So ...</p>
+    
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about-me" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="https://congpeijun.com/archives/puppet常见错误解释及解决方法.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="丛培君">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/881552?v=3&s=460">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="Hello World">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="Hello World" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                puppet常见错误解释及解决方法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2012-06-05T21:59:53+08:00">
+                2012-06-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/archives/puppet常见错误解释及解决方法.html#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="archives/puppet常见错误解释及解决方法.html" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>转自：<a href="http://www.mysqlops.com/2011/11/08/puppet-errors.html" title="http://www.mysqlops.com/2011/11/08/puppet-errors.html" target="_blank">http://www.mysqlops.com/2011/11/08/puppet-errors.html</a></p>
+<p>【导读】<br>puppet在运维管理是个自动化的工具，作用非常明显，但是苦于puppet 中文资料不多，puppet学习难度<br>大，在puppet使用过程中，碰到很多各种奇怪的问题，这里是 sky的个人总结的一些puppet常见错误，以<br>及相应的解决方法，也感谢部分群友的分享：坚持创新和Ninja<br>以及再一年等QQ好友，也希望更多的人分享puppet知识，共同进步。<br>【puppet 常见错误列表】<br>1.Failed to retrieve current state of resource: Could not retrieve information from source(s)<br>err: //test/File[/tmp/sky]: Failed to retrieve current state of resource: Could not retrieve information from source(s) puppet:///test/foo at /etc/puppet/modules/test/manifests/init.pp:6<br>解决方法：这是一般大多人犯的问题，这个问题一般是出现在puppetmaster上，大部分是source这个路径没有写对。可以查看init.pp的第6行，<br>一般正确的写法是source =&gt; “puppet:///test/sky”，关于文件服务器的写法，可以参阅之前的sky的文档.<br>2.Could not retrieve information from environment production source(s) puppet://server.puppet.com/plugins</p>
+<p>解决方法：这是一般都是通过yum或者apt-get安装了puppet，在puppetmaster和客户端的配置文件 里有pluginsync=true ,<br>把两端/etc/puppet.conf里pluginsync=true ,改成pluginsync=false，并重启puppetmaster即可解决。<br>再补充一种方法，如果不设置pluginsync=false，那么就需要到少要建个插件。<br>3.Could not request certificate: undefined method <code>closed?’
+err: Could not request certificate: undefined method</code>closed?’ for nil:NilClass Exiting;<br>failed to retrieve certificate and watiforcert is disabled<br>解决方法：a.确保puppet的运行用户是否有权限读ssl认证文件。<br>b.确认防火墙是否打开8140端口。<br>4.Change from absent to file failed<br>err: //test/File[/tmp/sky/<a href="http://www.mysqlops.com]/ensure" target="_blank" rel="noopener">www.mysqlops.com]/ensure</a>: change from absent to file failed: Could not set file on ensure: No such file or directory<br>解决方法：很明显，可能是没有/tmp/sky这个目录，如果没有，请使用 mkdir -p /tmp/sky.<br>5.Run of Puppet configuration client already in progress<br>解决方法，很明显，a.可以通过ps -axf|grep puppet是否有puppet进程在运行。如果有，则停掉puppet，再运行，即可。<br>b.没有进程，那有可能puppetdlock存在，则删除之，使用 rm -rf /var/puppet/state/puppetdlock<br>6.Change failed … Could not find server<br>err: //test/File[/tmp/sky]/content: change from {md5}068008008418dff20750a94336318974 to {md5}8db2d67767577c70b1251fd80ad32943 failed: Could not find server puppet<br>解决方法：这是设置了filebucket, 名称为puppet,但并不没有使用真名。在配置文件/etc/puppet.conf里设置如下：<br>filebucket {<br>puppetmaster: server =&gt; “<a href="http://www.mysqlops.com&quot;" target="_blank" rel="noopener">www.mysqlops.com&quot;</a> # server后面要用全名，即fqdn.<br>}<br>7.Could not retrieve catalog: can’t convert nil into String<br>err: Could not retrieve catalog: can’t convert nil into String at /etc/puppet/modules/test/manifests/init.pp:29 on node web-01.test.com<br>解决方法：确认模板文件是否存在。一般都是文件不存在的时候报的。<br>8.undefined method <code>closed?’ for nil:NilClass
+err: Could not retrieve catalog from remote server: undefined method</code>closed?’ for nil:NilClas<br>解决方法：经常可能是语法错误，少了双引号或者 大概号什么的。<br>9.certificate verify failed<br>err: /File[/var/lib/puppet/lib]: Failed to generate additional resources using ‘eval_generate’: SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B: certificate verify failed<br>err: /File[/var/lib/puppet/lib]: Failed to retrieve current state of resource: SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B: certificate verify failed Could not retrieve file metadata for puppet://puppet.example.com/plugins: SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B: certificate verify failed<br>err: Could not retrieve catalog from remote server: SSL_connect returned=1 errno=0 state=SSLv3 read server certificate B: certificate verify failed<br>解决方法：这可能是换了不同的两台puppetmaster服务器引起的。解决方法，删除现有ssl证书。find /var/lib/puppet -type f -print0 |xargs -0r rm<br>10.Could not retrieve catalog from remote server<br>err: Could not retrieve catalog from remote server: No such file or directory - /var/lib/puppet/client_yaml/catalog<br>解决方法：明显提示，/var/lib/puppet/client_yaml/可能不存在，没有则创建之。<br>11.no certificate found and waitforcert is disabled<br>warning: peer certificate won’t be verified in this SSL session<br>Exiting; no certificate found and waitforcert is disabled<br>解决方法：    这个是需要puppetmaster端给客户端ssl签名.<br>a.puppetca -l #列出等待签名的客户端<br>b.puppetca -s hostname # hostname 是客户端主机的名字。<br>12.Could not intern from pson: Could not convert from pson: Could not find relationship target ”<br>解决方法：这是一个bug, 针对版本0.25.1.在puppet0.25.5.1版本中可以在/etc/puppet/puppet.conf里添加<br>preferred_serialization_format = yaml 即可解决。<br>13.Error 400 on SERVER: No support for http method POST<br>err: Could not retrieve catalog from remote server: Error 400 on SERVER: No support for http method POST<br>解决方法：这个问题可能是puppetmaster是2.6版本，puppet客户端版本是2.7。请记住 ，puppetmaster版本可以大于或者等于客户端的版本。<br>不能小于，互换下puppet角色，即可。<br>14.You cannot specify more than one of content, source, target<br>err: Could not run Puppet configuration client: You cannot specify more than one of content, source, target at /etc/puppet/modules/test/manifests/init.pp:10<br>解决方法：错误提示很显示，不能为一个文件指定多个来源。<br>15.Could not retrieve catalog from remote server: wrong header line format<br>解决方法，可能是模板语法错误，请使用命令检查模板语法，示例：erb -x -T ‘-’ -P  test/templates/cron/cron.erb  |ruby -c<br>16.Cannot override local resource on node<br>err: Could not retrieve catalog from remote server: Error 400 on SERVER: Exported resource skyd[foo] cannot override local resource on node web-01.mysqlops.com<br>解决方法：这个问题，一般是在使用export 虚拟资源的时候会出现，可能是有重复的定义。<br>这可能是由于旧节点，运行puppet clean node。查看数据库。使用下面的sql<br>“select hosts.name from hosts,resources where restype=’skyd’ and title=’foo’ and hosts.id = resources.host_id;”<br>17.Could not render to pson: invalid utf8 byte<br>err: Could not retrieve catalog from remote server: Error 400 on SERVER: Could not render to pson: invalid utf8 byte:<br>解决方法：可能是有无效的utf8字符，可以使用命令：od -c filename 进行检查。</p>
+<ol start="18">
+<li>在安装dashboad的时候，报<br>RAILS_ENV=production db:migrate –trace<br>(in /usr/local/puppet-dashboard)<br><strong> Invoke db:migrate (first_time)
+</strong> Invoke environment (first_time)<br><strong> Execute environment
+</strong> Execute db:migrate<br><strong> Invoke db:schema:dump (first_time)
+</strong> Invoke environment<br>** Execute db:schema:dump<br>rake aborted!<br>undefined method `reenable’ for &lt;Rake::Task db:schema:dump =&gt; [environment]&gt;:Rake::Task<br>解决访问，可能是gem版本不对，升级版本，请确认版本是否满足安装dashboad的要求。<br>19.在执行facter命令的时候报：<br>err: Could not run Puppet configuration client: Could not retrieve local facts: execution expired<br>解决方法，由于ubuntu升级导致的ec2.rb有新的改动，可以修改/usr/lib/ruby/1.8/facter这个目录下面的ec2.rb文件后从新启动后解决。<br>具体解决方法如下：1. cd /usr/lib/ruby/1.8/facter<pre><code>2. cp ec2.rb{,.`date -I`} #备份新的ec2.rb这个文件
+3. 从正常执行的主机复制ec2.rb这个文件进行覆盖。或者比较两个文件的不同，进行修改。
+</code></pre>20.在使用gem 安装的时候会报：<br>ERROR:  Could not find a valid gem ‘rake’ (&gt;= 0) in any repository<br>ERROR:  While executing gem … (Gem::RemoteFetcher::FetchError)<br>解决方法：可能是没有gem源，或者无法访问源，大部分是网络问题。<br>可以多添加下几个gem 源来尝试解决：<br>使用命令：<br>gem sources -a <a href="http://gems.rubyforge.org" target="_blank" rel="noopener">http://gems.rubyforge.org</a><br>gem sources -a <a href="http://gems.rubyonrails.org" target="_blank" rel="noopener">http://gems.rubyonrails.org</a><br>gem sources -a <a href="http://gemcutter.org" target="_blank" rel="noopener">http://gemcutter.org</a><br>gem sources -a <a href="http://rubygems.org" target="_blank" rel="noopener">http://rubygems.org</a><br>添加了上面的四个gem源，希望能解决，另外使用gem 安装的过程比较慢，需要大家耐心点等待提示。<br>21.err: Could not request certificate: Retrieved certificate does not match private key; please remove certificate from server and regenerate it with the current key<br>解决方法：按照下面a-d四个步骤，即可。<br>a.在客户端可以删除rm -rf /var/lib/puppet/ssl/,<br>b.在puppetmaster端，执行 puppetca -c 客户端主机名<br>c. 客户端在重新生成证书请求: puppet –test –server puppetmaster主机名<br>d.在puppetmaster端，执行 puppetca -s 客户端主机名</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/archives/复制或克隆虚拟机后无eth0或eth0变eth1.html" rel="next" title="复制或克隆虚拟机后无eth0或eth0变eth1">
+                <i class="fa fa-chevron-left"></i> 复制或克隆虚拟机后无eth0或eth0变eth1
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/archives/ubuntu误删当前内核后的修复方法.html" rel="prev" title="Ubuntu误删当前内核后的修复方法">
+                Ubuntu误删当前内核后的修复方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="archives/puppet常见错误解释及解决方法.html"
+           data-title="puppet常见错误解释及解决方法" data-url="https://congpeijun.com/archives/puppet常见错误解释及解决方法.html">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="https://avatars0.githubusercontent.com/u/881552?v=3&s=460"
+               alt="丛培君" />
+          <p class="site-author-name" itemprop="name">丛培君</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">38</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/congpeijun" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2012 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">丛培君</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"congpeijun"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
