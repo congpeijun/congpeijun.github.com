@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"congpeijun.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="puppet 模块基础puppet模块可以导入，复用都很方便，在这里先回答下之前的两个问题：  查看puppet 模块路径，可以使用如下命令：  puppetmasterd --configprint modulepath1&#x2F;etc&#x2F;uppet&#x2F;modules:&#x2F;usr&#x2F;share&#x2F;puppet&#x2F;modules  #可以看到这两个目录是puppet 模块默认所在的目录。   要引用 puppet模">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Puppet 模块">
+<meta property="og:url" content="https://congpeijun.com/puppet-%E6%A8%A1%E5%9D%97/index.html">
+<meta property="og:site_name" content="Hello World">
+<meta property="og:description" content="puppet 模块基础puppet模块可以导入，复用都很方便，在这里先回答下之前的两个问题：  查看puppet 模块路径，可以使用如下命令：  puppetmasterd --configprint modulepath1&#x2F;etc&#x2F;uppet&#x2F;modules:&#x2F;usr&#x2F;share&#x2F;puppet&#x2F;modules  #可以看到这两个目录是puppet 模块默认所在的目录。   要引用 puppet模">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2012-06-14T13:26:14.000Z">
+<meta property="article:modified_time" content="2023-10-19T14:18:56.949Z">
+<meta property="article:author" content="丛培君">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="Puppet">
+<meta property="article:tag" content="分布式">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://congpeijun.com/puppet-%E6%A8%A1%E5%9D%97/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://congpeijun.com/puppet-%E6%A8%A1%E5%9D%97/","path":"puppet-模块/","title":"Puppet 模块"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Puppet 模块 | Hello World</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello World</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Just So So ...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about-me/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#puppet-%E6%A8%A1%E5%9D%97%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">puppet 模块基础</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="丛培君"
+      src="https://avatars0.githubusercontent.com/u/881552?v=3&s=460">
+  <p class="site-author-name" itemprop="name">丛培君</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/congpeijun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;congpeijun" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://congpeijun.com/puppet-%E6%A8%A1%E5%9D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/881552?v=3&s=460">
+      <meta itemprop="name" content="丛培君">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello World">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Puppet 模块 | Hello World">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Puppet 模块
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2012-06-14 21:26:14" itemprop="dateCreated datePublished" datetime="2012-06-14T21:26:14+08:00">2012-06-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-10-19 22:18:56" itemprop="dateModified" datetime="2023-10-19T22:18:56+08:00">2023-10-19</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="puppet-模块基础"><a href="#puppet-模块基础" class="headerlink" title="puppet 模块基础"></a>puppet 模块基础</h2><p>puppet模块可以导入，复用都很方便，在这里先回答下之前的两个问题：</p>
+<ol>
+<li>查看puppet 模块路径，可以使用如下命令：</li>
+</ol>
+<figure class="highlight plaintext"><figcaption><span>puppetmasterd --configprint modulepath</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/etc/uppet/modules:/usr/share/puppet/modules  #可以看到这两个目录是puppet 模块默认所在的目录。</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>要引用 puppet模块，如果模块所在上面的两个默认的路径可以使用：<br>import “模块名”<br>如果提示模块不存在，比如我在 &#x2F;data&#x2F;modules，那么有两种解决方法：</li>
+<li>是修改puppet.conf文件，添加目录到modulepath.举例 ：</li>
+</ol>
+<p><code>modulepath = /data/modules:/etlc/puppet/modules</code><br>2. 是在引用的是时候用绝对路径。<br>import “&#x2F;data&#x2F;modules&#x2F;模块名”</p>
+<p>了解完puppet 模块基础后，接下来就为大家写个简单模块示例：</p>
+<p>puppet 模块实例</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@s1:/etc/puppet/modules<span class="comment"># cd /etc/puppet/modules</span></span><br><span class="line">root@s1:/etc/puppet/modules<span class="comment"># mkdir -p test/&#123;manifests,files,templates&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这三个目录说明：files目录是用来存放同步远程客户端的文件或者文件夹，manifests目录下放.pp文件，且必须要有init.pp，templates是存放的puppet 模板文件，是以.erb结尾的。</p>
+<p>建立init.pp文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># /etc/puppet/modules/test/manifests/init.pp</span></span><br><span class="line">class <span class="built_in">test</span>::<span class="built_in">test</span> &#123;</span><br><span class="line">    file &#123; <span class="string">&quot;/tmp/test&quot;</span>:</span><br><span class="line">        owner   =&gt; root,</span><br><span class="line">        group   =&gt; root,</span><br><span class="line">        ensure  =&gt; present,</span><br><span class="line">        content =&gt; <span class="string">&quot;Hello word&quot;</span>,</span><br><span class="line">        mode    =&gt; <span class="string">&quot;0644&quot;</span>,</span><br><span class="line">     &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在&#x2F;etc&#x2F;puppet&#x2F;manifests&#x2F;site.pp里添加：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">node <span class="string">&quot;default&quot;</span> &#123;</span><br><span class="line">    include <span class="built_in">test</span>::<span class="built_in">test</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>注：不建议这样操作，实际生产中，我会在site.pp里添加 import “nodes.pp”，然后在nodes.pp里添加上面的内容。</p>
+<p>这样我们就建立了我们第一个puppet 模块，在到客户端 c2.inanu.net 上运行puppet查看结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">congpeijun@s2:/tmp$ puppet agent --server s1.ubuntu.local --<span class="built_in">test</span></span><br><span class="line">info: Caching catalog <span class="keyword">for</span> s2.ubuntu.local</span><br><span class="line">info: Applying configuration version <span class="string">&#x27;1339679532&#x27;</span></span><br><span class="line">notice: /Stage[main]/Test/File[/tmp/test]/ensure: created</span><br><span class="line">notice: Finished catalog run <span class="keyword">in</span> 0.05 seconds</span><br><span class="line">congpeijun@s2:/tmp$ <span class="built_in">cat</span> <span class="built_in">test</span></span><br><span class="line">Hello word</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>再次验证，可以看到已经成功运行，已经达到预期的效果。在&#x2F;tmp&#x2F;目录下生成了nanu这个文件，有个问题，不知道大家注意到没有，这里并没有import “test”模块，而直接使用了include test::test类。有兴趣的同学可以试试，再看下效果。</p>
+<p>本文参考 <a href="http://www.inanu.net/post/730.html" title="http://www.inanu.net/post/730.html" target="_blank">http://www.inanu.net/post/730.html</a></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/Puppet/" rel="tag"># Puppet</a>
+              <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F/" rel="tag"># 分布式</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/%E5%88%A9%E7%94%A8linode-vps-%E6%9E%B6%E8%AE%BEvpn%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="prev" title="利用linode vps 架设vpn服务器">
+                  <i class="fa fa-angle-left"></i> 利用linode vps 架设vpn服务器
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/backup-restore-mysql-database/" rel="next" title="Mysql 备份还原">
+                  Mysql 备份还原 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">丛培君</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>

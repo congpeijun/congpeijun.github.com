@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha256-CTSx/A06dm1B063156EVh15m6Y67pAjZZaQc89LLSrU=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"congpeijun.com","root":"/","images":"/images","scheme":"Gemini","darkmode":false,"version":"8.18.2","exturl":false,"sidebar":{"position":"right","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="再次吐槽下天国的网络 我的系统为Debian 安装PPTP服务器,以及 iptables123apt-get install pppapt-get install pptpdapt-get install iptables  配置PPTP服务器编辑&#x2F;etc&#x2F;pptpd.conf查找如下内容：12#localip 192.168.0.1#remoteip 192.168.0.23">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用linode vps 架设vpn服务器">
+<meta property="og:url" content="https://congpeijun.com/%E5%88%A9%E7%94%A8linode-vps-%E6%9E%B6%E8%AE%BEvpn%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
+<meta property="og:site_name" content="Hello World">
+<meta property="og:description" content="再次吐槽下天国的网络 我的系统为Debian 安装PPTP服务器,以及 iptables123apt-get install pppapt-get install pptpdapt-get install iptables  配置PPTP服务器编辑&#x2F;etc&#x2F;pptpd.conf查找如下内容：12#localip 192.168.0.1#remoteip 192.168.0.23">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2012-06-09T11:48:00.000Z">
+<meta property="article:modified_time" content="2023-10-19T14:18:56.951Z">
+<meta property="article:author" content="丛培君">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="vpn">
+<meta property="article:tag" content="vps">
+<meta property="article:tag" content="linode">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://congpeijun.com/%E5%88%A9%E7%94%A8linode-vps-%E6%9E%B6%E8%AE%BEvpn%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://congpeijun.com/%E5%88%A9%E7%94%A8linode-vps-%E6%9E%B6%E8%AE%BEvpn%E6%9C%8D%E5%8A%A1%E5%99%A8/","path":"利用linode-vps-架设vpn服务器/","title":"利用linode vps 架设vpn服务器"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>利用linode vps 架设vpn服务器 | Hello World</title>
+  
+
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Hello World</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">Just So So ...</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about-me/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%89%E8%A3%85PPTP%E6%9C%8D%E5%8A%A1%E5%99%A8-%E4%BB%A5%E5%8F%8A-iptables"><span class="nav-number">1.</span> <span class="nav-text">安装PPTP服务器,以及 iptables</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="丛培君"
+      src="https://avatars0.githubusercontent.com/u/881552?v=3&s=460">
+  <p class="site-author-name" itemprop="name">丛培君</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">38</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">20</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/congpeijun" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;congpeijun" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://congpeijun.com/%E5%88%A9%E7%94%A8linode-vps-%E6%9E%B6%E8%AE%BEvpn%E6%9C%8D%E5%8A%A1%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="https://avatars0.githubusercontent.com/u/881552?v=3&s=460">
+      <meta itemprop="name" content="丛培君">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hello World">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="利用linode vps 架设vpn服务器 | Hello World">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          利用linode vps 架设vpn服务器
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2012-06-09 19:48:00" itemprop="dateCreated datePublished" datetime="2012-06-09T19:48:00+08:00">2012-06-09</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-10-19 22:18:56" itemprop="dateModified" datetime="2023-10-19T22:18:56+08:00">2023-10-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/Linux/" itemprop="url" rel="index"><span itemprop="name">Linux</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>再次吐槽下天国的网络</p>
+<p>我的系统为Debian</p>
+<h2 id="安装PPTP服务器-以及-iptables"><a href="#安装PPTP服务器-以及-iptables" class="headerlink" title="安装PPTP服务器,以及 iptables"></a>安装PPTP服务器,以及 iptables</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">apt-get install ppp</span><br><span class="line">apt-get install pptpd</span><br><span class="line">apt-get install iptables</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>配置PPTP服务器<br>编辑&#x2F;etc&#x2F;pptpd.conf<br>查找如下内容：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#localip 192.168.0.1</span></span><br><span class="line"><span class="comment">#remoteip 192.168.0.234-238,192.168.0.245</span></span><br></pre></td></tr></table></figure>
+替换为：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">localip 192.168.183.1 <span class="comment">#这里 应该 和你vps的private 的ip在一个网段。我就是这样弄的。</span></span><br><span class="line">remoteip 192.168.183.234-238,192.168.183.245</span><br></pre></td></tr></table></figure>
+上面的两行为VPN服务器的IP和VPN客户端连接后获取到的IP范围。</li>
+<li>添加PPTP VPN用户<br>编辑 &#x2F;etc&#x2F;ppp&#x2F;chap-secrets<br>文件 内容如下</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#client        server  secret                  IP addresses</span><br></pre></td></tr></table></figure>
+
+<p>你主要按照上面的内容格式填写就行<br>bash echo “youname pptpd password  *” &gt;&gt; &#x2F;etc&#x2F;ppp&#x2F;chap-secrets&#96;&#96;&#96;</p>
+<ol start="4">
+<li>修改DNS服务器</li>
+</ol>
+<p>编辑&#x2F;etc&#x2F;ppp&#x2F;options，添加如下内容<br>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ms-dns 8.8.8.8</span><br><span class="line">ms-dns 8.8.4.4</span><br></pre></td></tr></table></figure>
+<p>5.开启ipv4转发 并设定nat转发规则<br>编辑&#x2F;etc&#x2F;sysctl.conf<br>去掉net.ipv4.ip_forward&#x3D;1前的注释</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sysctl -p <span class="comment">#使更改生效</span></span><br><span class="line"><span class="comment"># 设定nat转发规则</span></span><br><span class="line">iptables -t nat -A POSTROUTING -s 192.168.183.1/24 -o eth0 -j MASQUERADE</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li><p>重启PPTP服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service pptpd restart</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>拨上VPN上出墙吧</p>
+</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Linux/" rel="tag"># Linux</a>
+              <a href="/tags/vpn/" rel="tag"># vpn</a>
+              <a href="/tags/vps/" rel="tag"># vps</a>
+              <a href="/tags/linode/" rel="tag"># linode</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/ubuntu%E8%AF%AF%E5%88%A0%E5%BD%93%E5%89%8D%E5%86%85%E6%A0%B8%E5%90%8E%E7%9A%84%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95/" rel="prev" title="Ubuntu误删当前内核后的修复方法">
+                  <i class="fa fa-angle-left"></i> Ubuntu误删当前内核后的修复方法
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/puppet-%E6%A8%A1%E5%9D%97/" rel="next" title="Puppet 模块">
+                  Puppet 模块 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">丛培君</span>
+  </div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+</body>
+</html>
